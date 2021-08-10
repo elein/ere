@@ -1,0 +1,16 @@
+Contents:
+	ere.pl			-- elein's simple report engine
+	runre			-- script to invoke ere from the command line.
+	installere.sh		-- Installation script.
+	ere_copyright.html	-- Copyrights for ere.pl.
+	testuse.pl	-- tests for required perl modules
+===========================================================================
+Documentation is available at
+http://www.varlena.com/Reports/Docs
+
+Support and consulting is available
+from ae Consulting at info@varlena.com.
+
+The companion program ReRun is an example PostgreSQL/php/apache based 
+utility which supports a report registry and running of reports from
+a web page.  It is available under http://www.varlena.com/Reports.
