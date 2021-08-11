@@ -1,0 +1,104 @@
+#!/bin/bash
+#
+# Run script for ere standalone
+#======================================
+#
+# Default Report Info
+#
+ere=ere 
+debug=2;
+here=`pwd`;
+debugdir="debugdir=$here/";
+csvdir="csvdir=$here/";
+rptdir="rptdir=$here/";
+outputdir="$here/" ;
+#
+# Default Database info
+#
+host=$PGHOST
+port=$PGPORT
+user=$USER
+dbname=$PGDATABASE
+[ -z $dbname ] && dbname=$USER
+
+function USAGE ()
+{
+
+echo "
+   runre [-d database] [ -p port ] [ -u user] [-h host] [-? help] 
+	           [-D n] [ -c csvdir] [-r rptdir] [-o outputdir]
+	           [-g debugdir ] report
+
+	(none) -- help
+
+	Database connection info. Defaults to PG variables.
+		-d database
+		-p port
+		-u user
+		-h host
+
+	Report Run Information
+		-D n	        -- Debug Level. Default 2
+		-c csvdir     -- Where CSV output will go, if any. Default current directory.
+		-r rptdir     -- Where the report .xml files are. Default current directory.
+		-o outputdir  -- Where the ouput .html file will go. Default current directory.
+		-g debugdir   -- Where the debug file will go. Default current directory.
+
+	You can edit this script to set your most common defaults.
+
+";
+
+return;
+}
+
+export OPTIND=1
+while getopts d:p:u:h:D:c:r:o:g:  arg
+do
+   case "${arg}" in
+      d)
+         dbname=${OPTARG}
+      ;;
+      p)
+         port=${OPTARG}
+      ;;
+      u)
+         user=${OPTARG}
+      ;;
+      h)
+         host=${OPTARG}
+      ;;
+      D)
+         debug=${OPTARG}
+      ;;
+      c)
+         csvdir="cvsdir=${OPTARG}"
+         echo "c $csvdir";
+      ;;
+      r)
+         rptdir="rptdir=${OPTARG}"
+         echo "r $rptdir";
+      ;;
+      o)
+         outputdir="${OPTARG}"
+         echo "o $outputdir";
+      ;;
+      g)
+         debugdir="debugdir=${OPTARG}"
+         echo "g $debugdir";
+      ;;
+      *)
+         USAGE
+         exit 0
+      ;;
+   esac
+done
+shift `expr $OPTIND - 1 `
+report=${1};
+
+[ -z $report ] && { echo "Missing report name."; exit 0; };
+
+$ere $1 \
+	dbname=$dbname port=$port user=$user $debugdir $csvdir $rptdir \
+	debug=$debug $* > ${outputdir}$report.html
+
+echo "All done.";
